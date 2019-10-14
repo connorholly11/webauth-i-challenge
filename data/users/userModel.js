@@ -1,9 +1,14 @@
 const db = require("../db.config");
 
 module.exports = {
-  addUser
+  addUser,
+  getUsers
 };
 
 function addUser(newUser) {
-  db("users").insert(newUser);
+  return db("users").insert(newUser);
+}
+
+function getUsers() {
+  return db("users");
 }

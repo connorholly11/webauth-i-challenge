@@ -13,7 +13,7 @@ router.post("/register", (req, res) => {
 
   db.addUser(credentials)
     .then(user => {
-      res.status(200).json(user);
+      res.status(201).json(user);
       console.log("registering user success!");
     })
     .catch(error => {
@@ -26,6 +26,17 @@ router.post("/register", (req, res) => {
 
 router.post("/login", (req, res) => {});
 
-router.get("/users", (req, res) => {});
+router.get("/users", (req, res) => {
+  db.getUsers()
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: error,
+        message: "500 error getting users"
+      });
+    });
+});
 
 module.exports = router;
