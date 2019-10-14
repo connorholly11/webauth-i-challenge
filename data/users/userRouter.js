@@ -24,9 +24,32 @@ router.post("/register", (req, res) => {
     });
 });
 
-router.post("/login", (req, res) => {});
+router.post("/login", (req, res) => {
+  const { username, password } = req.body;
 
-router.get("/users", (req, res) => {
+  console.log(db.findBy({ username }));
+
+  db.findBy({ username })
+    .first()
+    .then(user => {
+      if (user && bcrypt.compareSync(password, user.password)) {
+        res.status(200).json({
+          user: user,
+          message: "welcome!"
+        });
+      } else {
+        res.status(401).json({ message: "invalid user credentials" });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: error,
+        message: "500 error logging in a user"
+      });
+    });
+});
+
+router.get("/users", protected, (req, res) => {
   db.getUsers()
     .then(users => {
       res.status(200).json(users);
@@ -38,5 +61,27 @@ router.get("/users", (req, res) => {
       });
     });
 });
+
+function protected(req, res, next) {
+  const { username, password } = req.headers;
+
+  console.log(db.findBy({ username }));
+
+  db.findBy({ username })
+    .first()
+    .then(user => {
+      if (user && bcrypt.compareSync(password, user.password)) {
+        next();
+      } else {
+        res.status(401).json({ message: "invalid user credentials" });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: error,
+        message: "500 error logging in a user"
+      });
+    });
+}
 
 module.exports = router;
