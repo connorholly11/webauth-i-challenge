@@ -19,6 +19,7 @@
   "homepage": "https://github.com/connorholly11/webauth-i-challenge#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "express-session": "^1.17.0",
     "knex": "^0.19.5",
     "sqlite3": "^4.1.0"
   },
